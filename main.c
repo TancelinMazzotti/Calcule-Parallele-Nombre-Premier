@@ -36,6 +36,20 @@ int main()
 
   printf("\n###### RECHERCHE NOMBRE PREMIER ######\n\n");
 
+  /******* EXPLICATION omp parallel for private() shedule() reduction() *********/
+
+  /* private -> variables prive a chaque thread, chaque thread aura SA variable
+   * innaccessible par les autres thread, on la qualifie donc de prive
+  */
+
+  // shedule -> odre d'execution des thread (ici dynamic car l'odre n'a pas d'importance)
+
+  /* reduction -> nombre_de_premier est prive a chaque thread donc on les
+   * additione ( reduction(+:) ) pour avoir le total du nombre de premier
+   * nombre_de_premier(thread 0) + nombre_de_premier(thread 1) +
+   * nombre_de_premier(thread 2)+ nombre_de_premier(thread 3)  = nombre_de_premier(total)
+  */
+
   #pragma omp parallel for private(diviseur,est_premier,id_thread) schedule(dynamic) reduction(+:nombre_de_premier)
   for(nombre = nombre_min; nombre <= nombre_max ; nombre++)
   {
@@ -50,15 +64,15 @@ int main()
           diviseur++; // on augmente le diviseur de 1 et on recommence
       }
 
-      // Add n to the list
+      // on recupere le numero du thread pour savoir que c'est lui qui est trouve le resultat
       id_thread = omp_get_thread_num();
-      if(est_premier)
+      if(est_premier) // si on a trover un nombre premier
       {
           #pragma omp critical   // afficher resultat chacun son tour
           {
-              printf("Thread N° %d a trouve: %d\n",id_thread,nombre);
+              printf("Thread N° %d a trouve: %d\n",id_thread,nombre); // affiche le resultat
           }
-          nombre_de_premier++;
+          nombre_de_premier++; // on augmente de 1 le nombre de nombre premier trouve
       }
   }
   return 0;
