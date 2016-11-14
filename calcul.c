@@ -23,7 +23,7 @@ void affichage_thread_disponnible()
   	}
 }
 
-void calcul_nombre_premier()
+void calcul_nombre_premier(int nombre_min, int nombre_max)
 {
 
 	int nombre_thread = 0;
@@ -33,9 +33,6 @@ void calcul_nombre_premier()
   	int diviseur = 0;
   	int est_premier = 0;
   	int nombre_de_premier = 0;
-
-  	int nombre_max = 30;
-  	int nombre_min = 2;
 
 	/******* EXPLICATION omp parallel for private() shedule() reduction() *********/
 
